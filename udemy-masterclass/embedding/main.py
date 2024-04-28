@@ -17,13 +17,7 @@ docs = loader.load_and_split(text_splitter=text_splitter)
 
 # instantly, calculate embeddings with openai - it cost fraction of penny
 db = Chroma.from_documents(
-    docs, embedding=embeddings, persist_directory="emb", k=1
-)  # k mean count of getting relavant item
-
-results = db.similarity_search_with_score(
-    "what is interesting facts of English language?"
+    docs,
+    embedding=embeddings,
+    persist_directory="emb",
 )
-
-for result in results:
-    print("\n")
-    print(result)
