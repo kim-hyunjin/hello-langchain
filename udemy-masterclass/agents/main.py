@@ -53,5 +53,8 @@ agent_executor = AgentExecutor(agent=agent, verbose=True, tools=tools, memory=me
 # agent_executor(
 #     "Summarize the top 5 most popular products. Write the results to a report file."
 # )
-agent_executor("How may orders are there? Write the result to a html report.")
-agent_executor("Repeat the exact same process for users.")
+
+while True:
+    content = input(">> ")
+    result = agent_executor(content)
+    print(result["output"])
