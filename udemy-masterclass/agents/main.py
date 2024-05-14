@@ -6,6 +6,8 @@ from langchain.prompts import (
 )
 from langchain.schema import SystemMessage
 from langchain.agents import OpenAIFunctionsAgent, AgentExecutor
+from langchain.memory import ConversationBufferMemory
+
 from dotenv import load_dotenv
 
 from tools.sql import run_query_tool, list_tables, describe_tables_tools
@@ -25,10 +27,13 @@ prompt = ChatPromptTemplate(
                 "or what columns exist. Instead, use the 'describe_tables' function"
             )
         ),
+        MessagesPlaceholder(variable_name="chat_history"),
         HumanMessagePromptTemplate.from_template("{input}"),
         MessagesPlaceholder(variable_name="agent_scratchpad"),
     ]
 )
+
+memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 tools = [run_query_tool, describe_tables_tools, write_report_tool]
 """
 Agent
@@ -42,9 +47,11 @@ Agent Executor
 - Takes an agent and runs it until the response is not a function call
 - Essentially a function while loop
 """
-agent_executor = AgentExecutor(agent=agent, verbose=True, tools=tools)
+agent_executor = AgentExecutor(agent=agent, verbose=True, tools=tools, memory=memory)
 
 # agent_executor("How many users have provided a shipping address?")
-agent_executor(
-    "Summarize the top 5 most popular products. Write the results to a report file."
-)
+# agent_executor(
+#     "Summarize the top 5 most popular products. Write the results to a report file."
+# )
+agent_executor("How may orders are there? Write the result to a html report.")
+agent_executor("Repeat the exact same process for users.")
