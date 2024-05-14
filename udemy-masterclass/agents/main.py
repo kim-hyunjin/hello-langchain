@@ -12,10 +12,12 @@ from dotenv import load_dotenv
 
 from tools.sql import run_query_tool, list_tables, describe_tables_tools
 from tools.report import write_report_tool
+from handlers.chat_model_start_handler import ChatModelStartHandler
 
 load_dotenv()
 
-chat = ChatOpenAI()
+handler = ChatModelStartHandler()
+chat = ChatOpenAI(callbacks=[handler])
 tables = list_tables()
 prompt = ChatPromptTemplate(
     messages=[
@@ -47,7 +49,12 @@ Agent Executor
 - Takes an agent and runs it until the response is not a function call
 - Essentially a function while loop
 """
-agent_executor = AgentExecutor(agent=agent, verbose=True, tools=tools, memory=memory)
+agent_executor = AgentExecutor(
+    agent=agent,
+    # verbose=True,
+    tools=tools,
+    memory=memory,
+)
 
 # agent_executor("How many users have provided a shipping address?")
 # agent_executor(
