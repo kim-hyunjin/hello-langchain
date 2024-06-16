@@ -25,4 +25,5 @@ def create_embeddings_for_pdf(pdf_id: str, pdf_path: str):
     loader = PyPDFLoader(pdf_path)
     docs = loader.load_and_split(text_splitter)
 
+    # 아래에서 임베딩을 만드는 데 오랜 시간이 걸림
     vector_store.add_documents(docs)
