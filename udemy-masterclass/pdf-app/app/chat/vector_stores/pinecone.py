@@ -15,6 +15,7 @@ vector_store = Pinecone.from_existing_index(
 
 # pinecone에 저장된 벡터에 메타데이터로 pdf_id가 있음.
 # 가장 유사한 벡터를 가져올 때, 현재 사용자가 보고 있는 pdf로 한정짓기 위해 필터 적용
-def build_retriever(chat_args: ChatArgs):
-    search_kwargs = {"filter": {"pdf_id": chat_args.pdf_id}}
+# Pinecone Retriever that fetchs top k docs
+def build_retriever(chat_args: ChatArgs, k):
+    search_kwargs = {"filter": {"pdf_id": chat_args.pdf_id}, "k": k}
     return vector_store.as_retriever(search_kwargs=search_kwargs)
