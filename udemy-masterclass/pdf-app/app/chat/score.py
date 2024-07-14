@@ -1,3 +1,4 @@
+import random
 from app.chat.redis import client
 
 
@@ -55,3 +56,31 @@ def get_scores():
     """
 
     pass
+
+
+def random_component_by_score(component_type, component_map):
+    """
+    유저 평가에 따라 컴포넌트 선택하는 함수
+    점수가 높을 수록 선택될 확률이 높아진다
+    """
+    if component_type not in ["llm", "retriever", "memory"]:
+        raise ValueError("not valid component type")
+
+    values = client.hgetall(f"{component_type}_score_values")
+    counts = client.hgetall(f"{component_type}_score_counts")
+
+    names = component_map.keys()
+    avg_scores = {}
+    for name in names:
+        score = int(values.get(name, 1))
+        count = int(counts.get(name, 1))
+        avg = score / count
+        avg_scores[name] = max(avg, 0.1)
+
+    sum_scores = sum(avg_scores.values())
+    random_val = random.uniform(0, sum_scores)
+    cumulative = 0
+    for name, score in avg_scores.items():
+        cumulative += score
+        if random_val <= cumulative:
+            return name
