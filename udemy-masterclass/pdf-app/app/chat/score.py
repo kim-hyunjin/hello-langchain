@@ -1,3 +1,6 @@
+from app.chat.redis import client
+
+
 def score_conversation(
     conversation_id: str, score: float, llm: str, retriever: str, memory: str
 ) -> None:
@@ -17,7 +20,15 @@ def score_conversation(
     score_conversation('abc123', 0.75, 'llm_info', 'retriever_info', 'memory_info')
     """
 
-    pass
+    score = min(max(score, 0), 1)
+    client.hincrby("llm_srore_values", llm, score)
+    client.hincrby("llm_srore_counts", llm, 1)
+
+    client.hincrby("retriever_srore_values", retriever, score)
+    client.hincrby("retriever_srore_counts", retriever, 1)
+
+    client.hincrby("memory_srore_values", memory, score)
+    client.hincrby("memory_srore_counts", memory, 1)
 
 
 def get_scores():
