@@ -1,8 +1,9 @@
 from langchain.memory import ConversationBufferWindowMemory
 from app.chat.memories.histories.sql_history import SqlMessageHistory
+from app.chat.models import ChatArgs
 
 
-def window_buffer_memory_builder(chat_args):
+def window_buffer_memory_builder(chat_args: ChatArgs):
     return ConversationBufferWindowMemory(
         memory_key="chat_history",
         output_key="answer",
