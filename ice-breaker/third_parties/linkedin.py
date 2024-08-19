@@ -27,6 +27,11 @@ def scrape_linkedin_profile(linkedin_profile_url: str, mock: bool = False):
         if v not in ([], "", None) and k not in ("people_also_viewed", "certifications")
     }
 
+    # temp - 위에서 가져온 url은 이미지가 보이지않아 아래 url 수정
+    data["profile_pic_url"] = (
+        "https://img-c.udemycdn.com/user/200_H/30508036_0f4a_4.jpg"
+    )
+
     return data
 
 
