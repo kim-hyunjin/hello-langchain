@@ -6,3 +6,5 @@ OPENAI_API_KEY
 INDEX_NAME
 PINECONE_API_KEY
 ```
+
+![retrieval](./images/img.png)
